@@ -3,9 +3,15 @@
 ## Project description
 This is a simple simulation of a randomly-generated railway network with trains, stations, accidents and all that could happen in real life.
 
+## Usage
+Run simulation.py via 
+```
+python3 simulation.py
+```
+
 ## Classes and fields description
 Currently project consists of next parts:
-  1. Simulation - class that represents the whole simulation.
+  1. Simulation - class that represents the whole simulation. It generates stations, distances and schedules on initialization.
   2. SimulationUI - for now it is a class, that can print routes and distances between stations. Further it's going to be a class, that draws and updates interface .
   3. Station - class that represents station. Station has it own ID and contains list of nearby(adjacent) stations.
   4. Route - class that represents list of stations.
