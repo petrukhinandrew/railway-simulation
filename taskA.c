@@ -28,7 +28,6 @@ int main() {
 	}
 	int mergedB[30 + listA_uniq], mergedA[30 + listB_mult];
 	memcpy(mergedB, listB, 120);
-	memcpy(mergedA, listA, 120);
 	
 	listA_uniq = 0;
 	listB_mult = 0;
@@ -38,10 +37,12 @@ int main() {
 			listA_uniq++;
 		}
 		if (listB_count[i] > 1) {
-			mergedA[30 + listB_mult] = i;
+			mergedA[listB_mult] = i;
 			listB_mult++;
 		}
 	}
+
+	memcpy(mergedA + listB_mult, listA, 120);
 	
 	for (int i = 0; i < 30 + listB_mult; ++i) {
 		printf("%d ", mergedA[i]);
