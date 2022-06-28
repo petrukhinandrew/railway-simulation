@@ -31,7 +31,17 @@ class Simulation:
         self.current_tick += 1
         for route in self.routes:
             route.tick(self.current_tick)
-
+        accident_chance = random.randint(1, 20)
+        if accident_chance > 15:
+            train_found = False
+            while not train_found:
+                route = random.choice(self.routes)
+                train = random.choice(route.trains_on_the_go)
+                if not train.in_accident:
+                    train_found = True
+                    train.in_accident = True
+                    train.accident = Accident(random.randint(1, 4))
+                
 
 class Checkpoint:
     def __init__(self, order_number, is_checkpoint):
@@ -39,14 +49,42 @@ class Checkpoint:
         self.is_checkpoint = is_checkpoint
         
 
+class Accident:
+    def __init__(self, hardness):
+        self.hardness = hardness
+        self.msg = self.generate_msg()
+
+
+    def generate_msg(self):
+        if self.hardness == 1:
+            return "Electricity is broken, will be fixed in a moment"
+        elif self.hardness == 2:
+            return "Machinist otravilsya, skoraya priedet i poedem dal'she"
+        elif self.hardness == 3:
+            return "Annushku namotalo na koleso, pridetsya podozhdat\'"
+        else:
+            return "Koronavirus razigralsya v vagone, zhdem brigadu iz SES"
+
+        
 class Train:
     def __init__(self, num, going_straight, current_checkpoint):
         self.number = num
         self.is_going_straight = going_straight
         self.current_checkpoint = current_checkpoint
-    
+
+        self.in_accident = False
+        self.accident = None
+        self.accident_ticks = 0
 
     def tick(self):
+        if self.in_accident:
+            self.accident_ticks += 1
+            if self.accident.hardness == self.accident_ticks:
+                self.accident = None
+                self.accident_ticks = 0
+                self.in_accident = False
+            return
+            
         if self.is_going_straight:
             self.current_checkpoint += 1
         else:
@@ -158,7 +196,7 @@ class Route:
         print()
 
 
-    # needed new logic
+    # needed new logic, what to do when there is 4 trains and 1 in an accident
     def tick(self, tick):
         self.last_tick = tick
         

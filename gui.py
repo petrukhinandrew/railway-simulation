@@ -32,7 +32,7 @@ class GUI:
         self.routes = []
         self.trains = []
 
-        self.tick_delay = 100
+        self.tick_delay = 500
 
         self.setup_routes()
         self.display_all_routes_as_straight()
@@ -94,7 +94,7 @@ class GUI:
         x = route_wrapper.checkpoints[index].x
         y = route_wrapper.checkpoints[index].y
         r = 5
-        color = "blue" if train.is_going_straight else "green"
+        color = "blue" if train.is_going_straight else "green" if not train.in_accident else "yellow"
 
         self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=color)
 
