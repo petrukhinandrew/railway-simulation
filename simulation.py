@@ -7,8 +7,7 @@ class Simulation:
         self.routes = []
         self.current_tick = 0
         self.setup_routes()
-        self.init_check()
-        
+                
         
     def init_check(self):
         self.display_routes()
@@ -106,14 +105,14 @@ class Route:
 
 
     def setup_checkpoints(self):
-        number_of_stations = random.randint(5, 9)
+        number_of_stations = random.randint(4, 7)
 
         for current_station_number in range(number_of_stations):
             self.checkpoints.append(Checkpoint(current_station_number, False))
 
             if (current_station_number == number_of_stations - 1):
                 break
-            number_of_checkpoints_for_current_station = random.randint(1, 3)
+            number_of_checkpoints_for_current_station = random.randint(2, 4)
 
             for _ in range(number_of_checkpoints_for_current_station):
                 self.checkpoints.append(Checkpoint(current_station_number + 100, True))
@@ -188,8 +187,3 @@ class Route:
             self.trains_on_the_go[0].start_lap(0)
             self.trains_on_the_go.insert(0, self.trains_reversed.pop())
             self.trains_on_the_go[0].start_lap(len(self.checkpoints) - 1)
-
-            
-s = Simulation()
-
-s.run()

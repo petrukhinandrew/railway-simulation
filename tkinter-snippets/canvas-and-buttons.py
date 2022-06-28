@@ -48,4 +48,5 @@ B.pack()
 
 # Runs an infinite loop so that the resultant window doesn't disappear
 # Executed only once when application is ready
+
 top.mainloop()
