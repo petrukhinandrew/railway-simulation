@@ -3,9 +3,8 @@ import random
 
 class Simulation:
     def __init__(self):
-        self.is_running = False
         self.routes = []
-        self.current_tick = 0
+        self.current_tick = -1
         self.setup_routes()
                 
         
@@ -27,23 +26,11 @@ class Simulation:
             print("Route: " + str(route_index))
             self.routes[route_index].display_stations()
         
-
-    def run(self):
-        self.is_running = True
-        self.loop()
-
         
     def tick(self):
-        print("Tick!")
+        self.current_tick += 1
         for route in self.routes:
             route.tick(self.current_tick)
-        self.current_tick += 1
-
-
-    def loop(self):
-        while self.is_running:
-            self.tick()
-            time.sleep(3)        
 
 
 class Checkpoint:
