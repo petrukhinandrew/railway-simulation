@@ -65,7 +65,7 @@ class Train:
 class Route:
     def __init__(self, num):
         self.number = num
-        self.interval = random.randint(1, 4)
+        self.interval = random.randint(10, 14)
         self.start_tick = random.randint(0, 2)
         self.last_tick = -1
         self.end_tick = 100
@@ -158,19 +158,19 @@ class Route:
         print()
 
 
-    # quickfix needed, as train is not to disappear right on interval     
+    # needed new logic
     def tick(self, tick):
         self.last_tick = tick
         
         for train in self.trains_on_the_go:
             train.tick()
-
-        if tick % self.interval == 0 and tick != 0:
-            self.trains_straight.insert(0, self.trains_on_the_go.pop())
-            self.trains_straight[0].end_lap()
             
+        if len(self.trains_on_the_go) != 0 and self.trains_on_the_go[-1].current_checkpoint == self.last_checkpoint_index + 1:        
             self.trains_reversed.insert(0, self.trains_on_the_go.pop())
             self.trains_reversed[0].end_lap()
+
+            self.trains_straight.insert(0, self.trains_on_the_go.pop())
+            self.trains_straight[0].end_lap()
             
         if tick % self.interval == 0:
             self.trains_on_the_go.insert(0, self.trains_straight.pop())

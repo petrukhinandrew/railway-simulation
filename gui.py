@@ -13,7 +13,7 @@ class CheckpointWrapper:
         self.checkpoint = checkpoint
         self.x = x
         self.y = y
-        self.radius = 4 if self.checkpoint.is_checkpoint else 10
+        self.radius = 5 if self.checkpoint.is_checkpoint else 12
         self.color = "green" if self.checkpoint.is_checkpoint else "red"
 
 
@@ -32,11 +32,7 @@ class GUI:
         self.routes = []
         self.trains = []
 
-        self.tick_delay = 1000
-        # option to move circles. how to store them?
-        
-        # self.train = self.canvas.create_oval(40, 40, 50, 50, fill="blue")
-        # self.canvas.move(self.train, -10, -10) # relative movement
+        self.tick_delay = 100
 
         self.setup_routes()
         self.display_all_routes_as_straight()
@@ -64,7 +60,7 @@ class GUI:
         line_length = 20
         for checkpoint in range(len(route.checkpoints)):
             if checkpoint != len(route.checkpoints) - 1:
-                self.canvas.create_line(100 * (index + 1), 50 + checkpoint * line_length, 100 * (index + 1), 50 + (checkpoint + 1) * line_length, fill="black", width=8)
+                self.canvas.create_line(100 * (index + 1), 50 + checkpoint * line_length, 100 * (index + 1), 50 + (checkpoint + 1) * line_length, fill="black", width=11)
             new_checkpoint = route.checkpoints[checkpoint]
             # self.canvas.create_oval(new_checkpoint.x - new_checkpoint.radius, new_checkpoint.y - new_checkpoint.radius, new_checkpoint.x + new_checkpoint.radius, new_checkpoint.y + new_checkpoint.radius, fill=new_checkpoint.color)
             if not route.route.checkpoints[checkpoint].is_checkpoint:
@@ -93,11 +89,13 @@ class GUI:
                 
     def display_train(self, route, train):
         route_wrapper = self.find_route_wrapper_by_route(route)
+
         index = train.current_checkpoint
         x = route_wrapper.checkpoints[index].x
         y = route_wrapper.checkpoints[index].y
-        r = 4
-        color = "blue"
+        r = 5
+        color = "blue" if train.is_going_straight else "green"
+
         self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=color)
 
 
