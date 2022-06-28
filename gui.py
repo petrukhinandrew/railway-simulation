@@ -13,19 +13,10 @@ class CheckpointWrapper:
         self.checkpoint = checkpoint
         self.x = x
         self.y = y
-        self.radius = 5 if self.checkpoint.is_checkpoint else 10
+        self.radius = 4 if self.checkpoint.is_checkpoint else 10
         self.color = "green" if self.checkpoint.is_checkpoint else "red"
 
 
-class TrainWrapper:
-    def __init__(self, train, route_wrapper, x, y):
-        self.train = train
-        self.route_wrapper = route_wrapper
-        self.x = x
-        self.y = y
-        self.radius = 5
-
-        
 class GUI:
     def __init__(self, sim):
         self.sim = sim
@@ -40,7 +31,8 @@ class GUI:
 
         self.routes = []
         self.trains = []
-        
+
+        self.tick_delay = 1000
         # option to move circles. how to store them?
         
         # self.train = self.canvas.create_oval(40, 40, 50, 50, fill="blue")
@@ -48,9 +40,8 @@ class GUI:
 
         self.setup_routes()
         self.display_all_routes_as_straight()
-
-        self.tick()
-        self.tick()
+        
+        self.root.after(self.tick_delay, self.tick)
         self.root.mainloop()
 
 
@@ -73,9 +64,11 @@ class GUI:
         line_length = 20
         for checkpoint in range(len(route.checkpoints)):
             if checkpoint != len(route.checkpoints) - 1:
-                self.canvas.create_line(100 * (index + 1), 50 + checkpoint * line_length, 100 * (index + 1), 50 + (checkpoint + 1) * line_length, fill="black", width=5)
+                self.canvas.create_line(100 * (index + 1), 50 + checkpoint * line_length, 100 * (index + 1), 50 + (checkpoint + 1) * line_length, fill="black", width=8)
             new_checkpoint = route.checkpoints[checkpoint]
-            self.canvas.create_oval(new_checkpoint.x - new_checkpoint.radius, new_checkpoint.y - new_checkpoint.radius, new_checkpoint.x + new_checkpoint.radius, new_checkpoint.y + new_checkpoint.radius, fill=new_checkpoint.color)
+            # self.canvas.create_oval(new_checkpoint.x - new_checkpoint.radius, new_checkpoint.y - new_checkpoint.radius, new_checkpoint.x + new_checkpoint.radius, new_checkpoint.y + new_checkpoint.radius, fill=new_checkpoint.color)
+            if not route.route.checkpoints[checkpoint].is_checkpoint:
+                self.canvas.create_oval(new_checkpoint.x - new_checkpoint.radius, new_checkpoint.y - new_checkpoint.radius, new_checkpoint.x + new_checkpoint.radius, new_checkpoint.y + new_checkpoint.radius, fill=new_checkpoint.color)
 
         
     def display_all_routes_as_straight(self):
@@ -103,7 +96,7 @@ class GUI:
         index = train.current_checkpoint
         x = route_wrapper.checkpoints[index].x
         y = route_wrapper.checkpoints[index].y
-        r = 5
+        r = 4
         color = "blue"
         self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=color)
 
@@ -118,4 +111,4 @@ class GUI:
         self.sim.tick()
         self.display_all_routes_as_straight()
         self.display_trains()
-        
+        self.root.after(self.tick_delay, self.tick)

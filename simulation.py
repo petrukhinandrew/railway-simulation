@@ -75,7 +75,7 @@ class Route:
         self.trains_reversed = []
         self.trains_on_the_go = []
         
-        self.setup_checkpoints()
+        self.last_checkpoint_index = self.setup_checkpoints()
         self.setup_trains()
 
 
@@ -92,18 +92,20 @@ class Route:
 
 
     def setup_checkpoints(self):
+        last_checkpoint_index = -1
         number_of_stations = random.randint(4, 7)
 
         for current_station_number in range(number_of_stations):
             self.checkpoints.append(Checkpoint(current_station_number, False))
-
+            last_checkpoint_index += 1
             if (current_station_number == number_of_stations - 1):
                 break
             number_of_checkpoints_for_current_station = random.randint(2, 4)
 
             for _ in range(number_of_checkpoints_for_current_station):
                 self.checkpoints.append(Checkpoint(current_station_number + 100, True))
-            
+                last_checkpoint_index += 1
+        return last_checkpoint_index
         
     def setup_trains(self):
         number_of_trains_needed_for_one_way = len(self.checkpoints) // self.interval + 1
@@ -155,7 +157,8 @@ class Route:
 
         print()
 
-    
+
+    # quickfix needed, as train is not to disappear right on interval     
     def tick(self, tick):
         self.last_tick = tick
         
@@ -173,4 +176,5 @@ class Route:
             self.trains_on_the_go.insert(0, self.trains_straight.pop())
             self.trains_on_the_go[0].start_lap(0)
             self.trains_on_the_go.insert(0, self.trains_reversed.pop())
-            self.trains_on_the_go[0].start_lap(len(self.checkpoints) - 1)
+            self.trains_on_the_go[0].start_lap(self.last_checkpoint_index)
+            
