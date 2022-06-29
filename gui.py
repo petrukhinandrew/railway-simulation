@@ -45,10 +45,10 @@ class GUI:
     def setup_canvas(self):
         self.canvas.create_line(900, 0, 900, 720, fill="black", width=5)
         self.canvas.create_line(1070, 50, 1070, 250, fill="black", width=5)
-        self.canvas.create_text(985, 75, text="Tuda")
-        self.canvas.create_text(1175, 75, text="Suda")
-        self.current_route_tag = self.canvas.create_text(1070, 25, text="Route Tag")
-        # self.canvas.configure(self.current_route_tag, text="new route tag, look!")
+        self.canvas.create_text(985, 75, font="Times 20 bold", text="Tuda")
+        self.canvas.create_text(1175, 75, font="Times 20 bold", text="Suda")
+        self.current_route_tag = self.canvas.create_text(1090, 25, font="Times 24 bold", text="Route Tag")
+        self.canvas.itemconfig(self.current_route_tag, text="new route tag, look!")
 
 
     def setup_routes(self):
