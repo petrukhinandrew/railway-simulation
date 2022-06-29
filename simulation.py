@@ -153,7 +153,7 @@ class Route:
         
 
     def load_upcoming_trains_schedule_by_index(self, index):
-        pass
+        return [], []
 
 
     def display_upcoming_trains_by_index(self, index):

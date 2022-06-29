@@ -1,3 +1,4 @@
+from tabnanny import check
 import tkinter as tk
 import simulation
 
@@ -31,11 +32,14 @@ class GUI:
 
         self.routes = []
         self.trains = []
-
+        self.canvas.itemconfig(self.current_route_tag, text="new route tag, look!")
         self.tick_delay = 500
 
         self.setup_routes()
         self.display_all_routes_as_straight()
+
+        self.load_timetable(self.sim.routes[0], 3)
+        self.display_timetable()
         
         self.root.after(self.tick_delay, self.tick)
         self.root.mainloop()
@@ -44,12 +48,36 @@ class GUI:
         
     def setup_canvas(self):
         self.canvas.create_line(900, 0, 900, 720, fill="black", width=5)
-        self.canvas.create_line(1070, 50, 1070, 250, fill="black", width=5)
+        self.canvas.create_line(1070, 50, 1070, 300, fill="black", width=5)
+        self.canvas.create_line(1070, 350, 1070, 600, fill="black", width=5)
+
         self.canvas.create_text(985, 75, font="Times 20 bold", text="Tuda")
         self.canvas.create_text(1175, 75, font="Times 20 bold", text="Suda")
         self.current_route_tag = self.canvas.create_text(1090, 25, font="Times 24 bold", text="Route Tag")
-        self.canvas.itemconfig(self.current_route_tag, text="new route tag, look!")
+        
+        self.current_route_displayign = None
+        self.current_route_static_timetable_straight = []
+        self.static_timetable_straight_text = self.canvas.create_text(985, 200, font="Times 15 bold", text="")
+        
+        self.current_route_static_timetable_reversed = []
+        self.static_timetable_reversed_text = self.canvas.create_text(1175, 200, font="Times 15 bold", text="")
 
+        self.current_route_upcoming_trains_straight = []
+        # self.dynamic_timetable_straight_text = self.canvas.create_text(985, 150, font="Times 15 bold", text="") # wrong x and y
+
+        self.current_route_upcoming_trains_reversed = []
+
+
+    def load_timetable(self, route, checkpoint_index):
+        self.current_route_static_timetable_straight, self.current_route_static_timetable_reversed = route.load_planned_timetable_by_index(checkpoint_index)
+        self.current_route_upcoming_trains_straight, self.current_route_upcoming_trains_reversed = route.load_upcoming_trains_schedule_by_index(checkpoint_index)
+        self.current_route_displayign = route
+
+
+    def display_timetable(self):
+        self.canvas.itemconfig(self.static_timetable_straight_text, text="\n".join(map(str, self.current_route_static_timetable_straight)))
+        self.canvas.itemconfig(self.static_timetable_reversed_text, text="\n".join(map(str, self.current_route_static_timetable_reversed)))
+        self.canvas.itemconfig(self.current_route_tag, text="Station: " + str(self.current_route_displayign.number))
 
     def setup_routes(self):
         for route in range(len(self.sim.routes)):
