@@ -32,4 +32,4 @@ class Config:
         self.routes_type = RoutesType.WEB if 'W' in flags else RoutesType.STRAIGHT
 
     def get_config(self):
-        return {'view_mode': self.view_mode, 'generation_mode': self.generation_mode}
+        return {'view_mode': self.view_mode, 'generation_mode': self.generation_mode, 'routes_type': self.routes_type}

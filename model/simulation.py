@@ -5,15 +5,15 @@ from model.routes_generator import RoutesGenerator
 
 class Simulation:
     def __init__(self, config):
-        self.routes = []
         self.current_tick = -1
         self.config = config
-        self.setup_routes()
+        self.routes = self.setup_routes()
 
     def setup_routes(self):
-        number_of_routes = random.randint(4, 7)
-        for route_number in range(number_of_routes):
-            self.routes.append(Route(route_number))
+        return RoutesGenerator.new_routes(self.config)
+        # number_of_routes = random.randint(4, 7)
+        # for route_number in range(number_of_routes):
+        #     self.routes.append(Route(route_number))
 
     def display_routes(self):
         for route_index in range(len(self.routes)):
