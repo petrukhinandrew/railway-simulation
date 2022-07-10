@@ -1,7 +1,7 @@
 import random
-from model.route import Route
+from model.route import Route # must be removed after implementing routes_generator
 from model.accident import Accident
-
+from model.routes_generator import RoutesGenerator
 
 class Simulation:
     def __init__(self, config):
@@ -9,12 +9,6 @@ class Simulation:
         self.current_tick = -1
         self.config = config
         self.setup_routes()
-
-    def init_check(self):
-        self.display_routes()
-        random_route = random.choice(self.routes)
-        random_checkpoint = random.randint(0, len(random_route.checkpoints) - 1)
-        random_route.display_timetable_by_index(random_checkpoint)
 
     def setup_routes(self):
         number_of_routes = random.randint(4, 7)
