@@ -2,9 +2,10 @@ import random
 
 
 class Simulation:
-    def __init__(self):
+    def __init__(self, config):
         self.routes = []
         self.current_tick = -1
+        self.config = config
         self.setup_routes()
 
     def init_check(self):

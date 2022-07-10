@@ -1,4 +1,3 @@
-from tabnanny import check
 import tkinter as tk
 import simulation
 

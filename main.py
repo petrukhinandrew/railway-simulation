@@ -1,6 +1,13 @@
-# import gui
+import sys
+
 import simulation
+import view_interface
+import args_handler
 
-sim = simulation.Simulation()
+config = args_handler.Config(sys.argv)
 
-# app = gui.GUI(sim)
+sim = simulation.Simulation(config.get_model_config())
+
+app = view_interface.ViewFactory(config.get_view_config())
+
+app.run()
