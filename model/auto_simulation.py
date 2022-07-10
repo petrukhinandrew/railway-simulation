@@ -1,16 +1,23 @@
 import random
+
+from model.simulation_interface import SimulationInterface
 from model.route import Route # must be removed after implementing routes_generator
 from model.accident import Accident
 from model.routes_generator import RoutesGenerator
 
-class Simulation:
+class AutoSimulation(SimulationInterface):
     def __init__(self, config):
         self.current_tick = -1
         self.config = config
-        self.routes = self.setup_routes()
+        self.setup()
+        self.routes = [] # self.setup_routes()
+
+    def setup(self):
+        pass
 
     def setup_routes(self):
-        return RoutesGenerator.new_routes(self.config)
+        pass
+        # return RoutesGenerator.new_routes(self.config)
         # number_of_routes = random.randint(4, 7)
         # for route_number in range(number_of_routes):
         #     self.routes.append(Route(route_number))

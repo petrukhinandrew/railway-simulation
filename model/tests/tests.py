@@ -1,5 +1,5 @@
 import unittest
-from model.simulation import Simulation
+from model.auto_simulation import Simulation
 
 
 class TestSimulation(unittest.TestCase):
