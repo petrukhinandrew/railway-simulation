@@ -1,32 +1,28 @@
-import time 
 import random
+
 
 class Simulation:
     def __init__(self):
         self.routes = []
         self.current_tick = -1
         self.setup_routes()
-                
-        
+
     def init_check(self):
         self.display_routes()
         random_route = random.choice(self.routes)
         random_checkpoint = random.randint(0, len(random_route.checkpoints) - 1)
         random_route.display_timetable_by_index(random_checkpoint)
 
-        
     def setup_routes(self):
         number_of_routes = random.randint(4, 7)
         for route_number in range(number_of_routes):
             self.routes.append(Route(route_number))
 
-
     def display_routes(self):
         for route_index in range(len(self.routes)):
             print("Route: " + str(route_index))
             self.routes[route_index].display_stations()
-        
-        
+
     def tick(self):
         self.current_tick += 1
         for route in self.routes:
@@ -41,13 +37,13 @@ class Simulation:
                     train_found = True
                     train.in_accident = True
                     train.accident = Accident(random.randint(1, 4))
-                
+
 
 class Checkpoint:
     def __init__(self, order_number, is_checkpoint):
         self.number = order_number
         self.is_checkpoint = is_checkpoint
-        
+
 
 class Accident:
     def __init__(self, hardness):
@@ -65,7 +61,7 @@ class Accident:
         else:
             return "Koronavirus razigralsya v vagone, zhdem brigadu iz SES"
 
-        
+
 class Train:
     def __init__(self, num, going_straight, current_checkpoint):
         self.number = num
@@ -84,7 +80,7 @@ class Train:
                 self.accident_ticks = 0
                 self.in_accident = False
             return
-            
+
         if self.is_going_straight:
             self.current_checkpoint += 1
         else:
@@ -94,12 +90,12 @@ class Train:
     def start_lap(self, new_checkpoint):
         self.current_checkpoint = new_checkpoint
 
-        
+
     def end_lap(self):
         self.is_going_straight = not self.is_going_straight
         self.current_checkpoint = -1
 
-        
+
 class Route:
     def __init__(self, num):
         self.number = num
@@ -107,12 +103,12 @@ class Route:
         self.start_tick = random.randint(0, 2)
         self.last_tick = -1
         self.end_tick = 100
-        
+
         self.checkpoints = []
         self.trains_straight = []
         self.trains_reversed = []
         self.trains_on_the_go = []
-        
+
         self.last_checkpoint_index = self.setup_checkpoints()
         self.setup_trains()
 
@@ -144,13 +140,13 @@ class Route:
                 self.checkpoints.append(Checkpoint(current_station_number + 100, True))
                 last_checkpoint_index += 1
         return last_checkpoint_index
-        
+
     def setup_trains(self):
         number_of_trains_needed_for_one_way = len(self.checkpoints) // self.interval + 1
         for train_number in range(0, number_of_trains_needed_for_one_way):
             self.trains_straight.append(Train(100 + train_number, True, -1))
             self.trains_reversed.append(Train(200 + train_number, False, -1))
-        
+
 
     def load_upcoming_trains_schedule_by_index(self, index):
         return [], []
@@ -159,27 +155,27 @@ class Route:
     def display_upcoming_trains_by_index(self, index):
         pass
 
-        
+
     def load_planned_timetable_by_index(self, index):
         first_train_tick_straight = self.start_tick + index
         next_train_tick_straight = first_train_tick_straight + self.interval
 
         first_train_tick_reversed = self.start_tick + len(self.checkpoints) - index - 1
         next_train_tick_reversed = first_train_tick_reversed + self.interval
-        
+
         timetable_straight = [first_train_tick_straight]
         timetable_reversed = [first_train_tick_reversed]
-                
+
         while next_train_tick_straight < self.end_tick or next_train_tick_reversed < self.end_tick:
             timetable_straight.append(next_train_tick_straight)
             timetable_reversed.append(next_train_tick_reversed)
-            
+
             next_train_tick_straight += self.interval
             next_train_tick_reversed += self.interval
 
         return (timetable_straight, timetable_reversed)
 
-            
+
     def display_timetable_by_index(self, index):
         timetable_straight, timetable_reversed = self.load_planned_timetable_by_index(index)
 
@@ -199,20 +195,19 @@ class Route:
     # needed new logic, what to do when there is 4 trains and 1 in an accident
     def tick(self, tick):
         self.last_tick = tick
-        
+
         for train in self.trains_on_the_go:
             train.tick()
-            
-        if len(self.trains_on_the_go) != 0 and self.trains_on_the_go[-1].current_checkpoint == self.last_checkpoint_index + 1:        
+
+        if len(self.trains_on_the_go) != 0 and self.trains_on_the_go[-1].current_checkpoint == self.last_checkpoint_index + 1: 
             self.trains_reversed.insert(0, self.trains_on_the_go.pop())
             self.trains_reversed[0].end_lap()
 
             self.trains_straight.insert(0, self.trains_on_the_go.pop())
             self.trains_straight[0].end_lap()
-            
+
         if tick % self.interval == 0:
             self.trains_on_the_go.insert(0, self.trains_straight.pop())
             self.trains_on_the_go[0].start_lap(0)
             self.trains_on_the_go.insert(0, self.trains_reversed.pop())
             self.trains_on_the_go[0].start_lap(self.last_checkpoint_index)
-            
