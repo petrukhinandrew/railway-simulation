@@ -5,9 +5,9 @@ from view.cli import CLI
 
 class ViewFactory:    
     def new_view(sim, config):
-        if config['mode'] == ViewMode.CONSOLE:
+        if config['view_mode'] == ViewMode.CONSOLE:
             return CLI(sim)
-        elif config['mode'] == ViewMode.GRAPHICS:
+        elif config['view_mode'] == ViewMode.GRAPHICS:
             return GUI(sim)
         else:
             raise RuntimeError("Bad view mode given.")
