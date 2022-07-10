@@ -1,8 +1,8 @@
-from auto_simulation import AutoSimulation
-from manual_simulation import ManualSimulation
+from model.auto_simulation import AutoSimulation
+from model.manual_simulation import ManualSimulation
 from config import GenerationMode
 
-class SimulationFactory:
+class SimulationBuilder:
     def new_simulation(config):
         if config['generation_mode'] == GenerationMode.AUTO:
             return AutoSimulation(config)

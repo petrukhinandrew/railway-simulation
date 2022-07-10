@@ -3,7 +3,7 @@ from view.gui import GUI
 from view.cli import CLI
 
 
-class ViewFactory:    
+class ViewBuilder:    
     def new_view(sim, config):
         if config['view_mode'] == ViewMode.CONSOLE:
             return CLI(sim)
