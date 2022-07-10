@@ -9,11 +9,14 @@ class ViewMode(Enum):
 class Config:
     def __init__(self, args):
         self.view_mode = ViewMode.CONSOLE
+        self.parse_args(args)
+
+    def parse_args(self, args):
         print(args)
-        
+
     def get_view_config(self):
-        pass
+        return {'mode': self.view_mode}
 
     def get_model_config(self):
-        pass
+        return {}
     

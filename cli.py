@@ -1,10 +1,9 @@
-import simulation
-import time 
+from view_interface import ViewInterface
 
 
-class CLI:
+class CLI(ViewInterface):
     def __init__(self, sim):
-        pass
+        self.sim = sim
 
     def run(self):
         print("RUNNING!")

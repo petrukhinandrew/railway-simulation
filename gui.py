@@ -1,5 +1,6 @@
 import tkinter as tk
 import simulation
+from view_interface import ViewInterface
 
 
 class RouteWrapper:
@@ -17,7 +18,7 @@ class CheckpointWrapper:
         self.color = "green" if self.checkpoint.is_checkpoint else "red"
 
 
-class GUI:
+class GUI(ViewInterface):
     def __init__(self, sim):
         self.sim = sim
 
@@ -40,11 +41,10 @@ class GUI:
         self.load_timetable(self.sim.routes[0], 3)
         self.display_timetable()
         
+    def run(self):
         self.root.after(self.tick_delay, self.tick)
         self.root.mainloop()
 
-
-        
     def setup_canvas(self):
         self.canvas.create_line(900, 0, 900, 720, fill="black", width=5)
         self.canvas.create_line(1070, 50, 1070, 300, fill="black", width=5)
