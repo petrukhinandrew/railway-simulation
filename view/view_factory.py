@@ -1,6 +1,6 @@
-from args_handler import ViewMode
-from gui import GUI
-from cli import CLI
+from config import ViewMode
+from view.gui import GUI
+from view.cli import CLI
 
 
 class ViewFactory:    

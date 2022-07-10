@@ -1,6 +1,5 @@
 import tkinter as tk
-import simulation
-from view_interface import ViewInterface
+from view.view_interface import ViewInterface
 
 
 class RouteWrapper:

@@ -1,4 +1,4 @@
-from view_interface import ViewInterface
+from view.view_interface import ViewInterface
 
 
 class CLI(ViewInterface):
