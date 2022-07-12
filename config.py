@@ -16,7 +16,7 @@ class ViewMode(Enum):
     CONSOLE = 0
 
 
-class Config:
+class InitConfig:
     def __init__(self, args):
         self.generation_mode = GenerationMode.AUTO
         self.view_mode = ViewMode.CONSOLE
