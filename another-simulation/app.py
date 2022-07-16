@@ -11,55 +11,65 @@ from logger import Logger, LoggingLevel
 class AppState(Enum):
     INITIALISING = 0,
     RUNNING = 1,
-    PAUSED = 2
+    PAUSED = 2,
+    SHUTDOWN = 3
 
 
 class App:
     def __init__(self, args):
-        self.init_config = InitConfig(args).get_config()
-
         self.logger = Logger(LoggingLevel.DEBUG)
-        self.timer = None
-        self.update_freq = 30  # amount of updates per minute
-
-        self.model = ModelFactory.new(self.init_config)
-        self.view = ViewFactory.new(self.init_config)
-        self.link_model_and_view()
+        self.logger.log("Logger set up. Initialising app")
 
         self.state = AppState.INITIALISING
+        self.init_config = InitConfig(args).get_config()
+        self.logger.log("Config read correctly.")
+
+        self.timer = threading.Thread(target=self.update, name="model")
+        self.update_freq = 20  # amount of updates per minute
+
+        self.model = ModelFactory.new(self.init_config)
+        self.logger.log("Model set up.")
+
+        self.view = ViewFactory.new(self.init_config, self, self.model)
+        self.logger.log("View set up.")
 
     def start(self):
-        if self.timer is None:
-            self.timer = threading.Thread(target=self.update, name="model")
-        else:
-            raise Exception("App is already working")
+        self.state = AppState.RUNNING
+        self.logger.log("Starting app. Mode switched to RUNNING")
+
         self.timer.start()
         self.view.start()
+
+    def resume(self):
         self.state = AppState.RUNNING
+
+        self.model.resume()
+
+        self.logger.log("Mode switched to RUNNING")
 
     def pause(self):
         if self.state != AppState.RUNNING:
             raise Exception('App is not running')
+
         self.state = AppState.PAUSED
 
+        self.model.pause()
+        self.view.pause()
+
+        self.logger.log("Mode switched to PAUSED")
+
     def shutdown(self):
-        if self.state == AppState.INITIALISING:
-            raise Exception('App is already shutdown')
+        self.state = AppState.SHUTDOWN
+        self.logger.log("Mode switched to SHUTDOWN")
 
-        self.timer.join()
-        while (self.timer.is_alive()):
-            sleep(0.1)
+        self.model.shutdown()
+        self.logger.log("Model shutdown")
 
-        self.state = AppState.INITIALISING
+        self.logger.log("Exiting app.")
 
     def update(self):
-        while True:
+        while self.state != AppState.SHUTDOWN:
             if self.state == AppState.RUNNING:
                 self.model.update()
                 self.view.update()
-                self.logger.log("Tick!")
                 sleep(60 / self.update_freq)
-
-    def link_model_and_view(self):
-        self.model.view = self.view
-        self.view.model = self.model
