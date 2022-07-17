@@ -1,13 +1,6 @@
 import threading
 from config import ViewMode
-from enum import Enum
-
-
-class RunningState(Enum):
-    INITIALISING = 0,
-    RUNNING = 1,
-    PAUSED = 2,
-    SHUTDOWN = 3
+from app import AppState
 
 
 class ViewFactory:
@@ -36,7 +29,7 @@ class ViewInterface:
 
 class GraphicsView(ViewInterface):
     def __init__(self, config, app, model):
-        super().__init__(config)
+        raise Exception("Not yet implemented")
 
 
 class ConsoleView(ViewInterface):
@@ -44,15 +37,14 @@ class ConsoleView(ViewInterface):
         self.model = model
         self.app = app
         self.logger = self.app.logger
-        self.state = RunningState.INITIALISING
+        self.state = self.app.state
         self.controller_timer = threading.Thread(target=self.__controller)
 
     def start(self):
-        self.state = RunningState.RUNNING
         self.controller_timer.start()
 
     def __controller(self):
-        while self.state != RunningState.SHUTDOWN:
+        while self.state != AppState.SHUTDOWN:
             command = input().strip()
             self.logger.log("-> " + command)
             if command == "pause":
@@ -71,15 +63,10 @@ class ConsoleView(ViewInterface):
         self.app.resume()
 
     def __init_shutdown(self):
-        self.state = RunningState.SHUTDOWN
         self.app.shutdown()
 
     def __unknown_command(self, command):
-        # print("Unknown command: " + command)
         self.logger.log("unknown command: " + command)
-
-    def pause(self):
-        pass
 
     def shutdown(self):
         return super().shutdown()

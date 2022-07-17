@@ -3,7 +3,7 @@ from time import sleep
 from enum import Enum
 
 from config import InitConfig
-from model import ModelFactory
+from model import ModelBuilder
 from view import ViewFactory
 from logger import Logger, LoggingLevel
 
@@ -27,7 +27,7 @@ class App:
         self.timer = threading.Thread(target=self.update, name="model")
         self.update_freq = 20  # amount of updates per minute
 
-        self.model = ModelFactory.new(self.init_config)
+        self.model = ModelBuilder.new(self.init_config)
         self.logger.log("Model set up.")
 
         self.view = ViewFactory.new(self.init_config, self, self.model)
@@ -52,9 +52,6 @@ class App:
             raise Exception('App is not running')
 
         self.state = AppState.PAUSED
-
-        self.model.pause()
-        self.view.pause()
 
         self.logger.log("Mode switched to PAUSED")
 
